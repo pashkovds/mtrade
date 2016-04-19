@@ -1,0 +1,29 @@
+TemplateId,UploadSourceID,SourceID,Template,TemplateInputs,Description
+ST.GDP,Quandl,OECD,OECD/MEI_CLI_LORSGPNO_%s_M,CountrySuffix,GDP growth rates normalized
+ST.INDPROD,Quandl,OECD,OECD/KEI_PRINTO01_%s_GP_M,CountrySuffix,Industrial production
+ST.STOCK,Quandl,OECD,OECD/MEI_FIN_SP_%s_M,CountrySuffix,Stock prices
+ST.CPI,Quandl,OECD,OECD/MEI_PRICES_CPALTT_%s_IXOB_Q,CountrySuffix,Consumer prices
+ST.RESERVE,Quandl,OECD,OECD/MEI_FIN_XF_%s_M,CountrySuffix,Reserve assets
+ST.CLI,Quandl,OECD,OECD/MEI_CLI_LOLITOAA_%s_M,CountrySuffix,Composite leading indicator
+ST.CONFIDENCE,Quandl,OECD,OECD/MEI_BTS_COS_BCCI_%s_BLSA_M,CountrySuffix,Consumer confidence
+ST.UTIL,Quandl,OECD,OECD/MEI_BTS_COS_BSCURT_%s_BLSA_Q,CountrySuffix,Capacity utilization
+ST.IRATE,Quandl,OECD,OECD/MEI_FIN_IRLT_%s_M,CountrySuffix,Long term interest rates
+ST.M1,Quandl,OECD,OECD/MEI_FIN_MANM_%s_M,CountrySuffix,Narrow money
+ST.M3,Quandl,OECD,OECD/MEI_FIN_MABM_%s_Q ,CountrySuffix,Wide money
+GDP,Quandl,ODA,ODA/%s_NGDP,CountrySuffix,GDP at Current Prices
+GDPCH,Quandl,ODA,ODA/%s_NGDP_RPCH,CountrySuffix,"GDP at Constant Prices, % change"
+UNEMP,Quandl,ODA,ODA/%s_LUR,CountrySuffix,Unemployment Rate
+CPI,Quandl,WORLDBANK,WORLDBANK/%s_FP_CPI_TOTL,CountrySuffix,Consumer price index
+LENDRATE,Quandl,WORLDBANK,WORLDBANK/USA_FR_INR_LEND,CountrySuffix,Lending interest rate
+MCAP,Quandl,WORLDBANK,WORLDBANK/%s_CM_MKT_LCAP_CD,CountrySuffix,Stock market capitalization
+STOCK,Quandl,WORLDBANK,WORLDBANK/%s_DSTKMKTXD,CountrySuffix,Stock Market Index
+GOVREV,Quandl,ODA,ODA/%s_GGR,CountrySuffix,Government revenues
+GOVEXP,Quandl,ODA,ODA/%s_GGX,CountrySuffix,Government spending
+DEBT,Quandl,ODA,ODA/%s_GGXWDN,CountrySuffix,Net debt
+INDPROD,Quandl,WORLDBANK,WORLDBANK/%s_IPTOTSAKD,CountrySuffix,Industrial production
+IMPORT,Quandl,UN,UN/COMM_1_ALLCOMMODITIES_IMPORT_%s,CountrySuffix,Imports
+EXPORT,Quandl,UN,UN/COMM_1_ALLCOMMODITIES_EXPORT_%s,CountrySuffix,Exports
+RESERV,Quandl,WORLDBANK,WORLDBANK/%s_TOTRESV,CountrySuffix,Reserves
+TBALANCE,Quandl,WORLDBANK,WORLDBANK/%s_NE_RSB_GNFS_CD,CountrySuffix,TradeBalance
+TAXPGDP,Quandl,WORLDBANK,WORLDBANK/%s_GC_TAX_TOTL_GD_ZS,CountrySuffix,Tax share of GDP
+TAXRATE,Quandl,WORLDBANK,WORLDBANK/%s_IC_TAX_TOTL_CP_ZS,CountrySuffix,Tax share of corporate profits
