@@ -94,13 +94,14 @@ mdata.man$remove.non.updatable()
 
 
 descriptions <- mdata.man$get.updater.descriptions()
-descriptions <- descriptions[descriptions$src %in% "OECD", ]
+descriptions <- descriptions[descriptions$type %in% "macro.series", ]
 
 ts.common <- do.call(
   cbind,
   lapply(
     descriptions$Name.Updater,
     function(upd.name) {
+      cat(upd.name,"\n")
       df.tmp <- mdata.man$get.mdata(upd.name)$get.field.values()
       ts.data <- timeSeries(df.tmp$Value, df.tmp$Date)
       colnames(ts.data) <- upd.name
@@ -123,105 +124,12 @@ mdata.man$add.updater(
   MDataUpdater.CustomTaxonomy$new(
     mdata.man$get.mdata.set(),
     MData$new(),
-    mdata.name = "common.table.macro.oecd",
+    mdata.name = "common.table.macro",
     description = data.frame(
       type="common.table",
-      name="OECD.macro.series"
+      name="macro.series.aggreagted"
     ),
     data.frame.input = common.df,
     new.taxonomy = macro.tickers
   )
 )
-
-search.fids <- function(taxonomy, ...){
-  lst.input <- list(...)
-    id.lst <- lapply(
-      names(lst.input),
-      function(nms){
-        which(taxonomy[[nms]] %in% lst.input[[nms]] )
-      }
-    )
-    
-    id.fin <- Reduce(intersect, id.lst)
-    if(!is.null(id.fin)){
-      tax.tmp <- taxonomy[id.fin,]
-      id.fin.order <- match(lst.input[[1]], tax.tmp[[names(lst.input)[1]]])
-      id.fin <- id.fin[id.fin.order]
-    }
-    id.fin
-}
-
-
-
-
-md <- mdata.man$get.mdata("common.table.macro.oecd")
-
-Country.set <- na.omit(unique(md$get.taxonomy()$CountryID))
-Template.set <- na.omit(unique(md$get.taxonomy()$TemplateId))
-
-macro.fids.matrix <- do.call(
-  rbind,
-  lapply( 
-    Template.set,
-    function(tmplt){
-      search.fids(md$get.taxonomy(), CountryID = Country.set, TemplateId = tmplt)
-    }
-  )
-)
-colnames(macro.fids.matrix) <- Country.set
-rownames(macro.fids.matrix) <- Template.set
-rownames(macro.fids.matrix)
-
-timeline <- md$get.field.values(md$get.fids(fname = "DATADATE"))
-stock <- apply(as.matrix(md$get.field.values())[,macro.fids.matrix["ST.STOCK",]], 2, as.numeric)
-cpi <- apply(as.matrix(md$get.field.values())[,macro.fids.matrix["ST.CPI",]], 2, as.numeric)
-gdp <- apply(as.matrix(md$get.field.values())[,macro.fids.matrix["ST.GDP",]], 2, as.numeric)
-irate <- apply(as.matrix(md$get.field.values())[,macro.fids.matrix["ST.IRATE",]], 2, as.numeric)/100
-indprod <- apply(as.matrix(md$get.field.values())[,macro.fids.matrix["ST.INDPROD",]], 2, as.numeric)
-cli <- apply(as.matrix(md$get.field.values())[,macro.fids.matrix["ST.CLI",]], 2, as.numeric)
-
-library(caTools)
-delay.N = 6
-stock.rets.cur <- apply(stock, 2, function(s){ 
-  s1 <- c(NA, diff(s)/s[-length(s)])
-  s1
-})
-stock.rets <- apply(stock, 2, function(s){ 
-  s1 <- c(NA, diff(s)/s[-length(s)])
-  c(s1[-(1:delay.N )],rep(NA,delay.N ))
-})
-stock.rets[abs(stock.rets)>1] <- 0
-inflation <- apply(cpi, 2, function(s){ c(NA,diff(s)/s[-length(s)])})
-inflation <- 12*apply(inflation,2,runmean, 12, align= "right")
-
-#signal <- (-1) * t(apply(gdp,1, function(s){ s- mean(s, na.rm=T)}))
-#signal <-  irate #- inflation
-#signal <- stock.rets.cur
-signal <- (-1) * indprod
-#signal <- (-1) * apply(signal, 2, function(s){ c(NA,diff(s))})
-signal <- signal - apply(signal, 2, runmean, 12*5, align = "right")
-#signal <-  apply(signal, 2, runmean, 6, align = "right")
-signal <- signal/ apply(signal, 2, runsd, 12*5, align = "right")
-signal <-  t(apply(signal ,1, function(s){ s- mean(s, na.rm=T)}))
-signal <- signal/rowSums(abs(signal), na.rm=T)
-
-par(mfrow=c(1,1))
-plot(timeline, cumsum(rowSums( signal*stock.rets, na.rm=T)),type="l")
-sort(tail(signal,1)[1,])
-
-x <- indprod[,3]
-y <- gdp[,3]
-
-f.nrm <- function(s){
-  (s - min(s, na.rm=T))/ (max(s, na.rm=T) - min(s, na.rm=T))
-}
-par(mfrow=c(2,1))
-plot(tail(gdp[,3],500),type="l")
-plot(tail(x,500),type="l")
-
-par(mfrow=c(4,4))
-for (i in 1:ncol(signal)){
-z <- (signal*stock.rets)[,i]
-z[is.na(z)] <- 0
-plot(timeline,cumsum(z),type="l", main = colnames(signal)[i])
-}
