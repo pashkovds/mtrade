@@ -255,5 +255,5 @@ mdata.man$add.instruction(
 )
 
 mdata.man$execute.all.instructions()
-save(mdata.man, file = "./data/world.equity.screener.RData")
+
 
